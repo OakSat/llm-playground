@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI LLM Playground</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    #chat {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1em;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .msg {
+      max-width: 60%;
+      padding: 0.8em 1em;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #007bff;
+      color: white;
+    }
+
+    .ai {
+      align-self: flex-start;
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    #input-area {
+      display: flex;
+      padding: 1em;
+      border-top: 1px solid #ccc;
+      background-color: white;
+    }
+
+    #input {
+      flex-grow: 1;
+      padding: 0.6em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #send {
+      margin-left: 1em;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #send:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chat"></div>
+
+  <div id="input-area">
+    <input id="input" type="text" placeholder="Ask something..." />
+    <button id="send">Send</button>
+    <!-- TODO: Add a proerass feedback circular indeterminate -->
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const inputBox = document.getElementById("input");
+      const chat = document.getElementById("chat");
+      const message = inputBox.value.trim();
+      if (!message) return;
+
+      const userBubble = document.createElement("div");
+      userBubble.className = "msg user";
+      userBubble.textContent = message;
+      chat.appendChild(userBubble);
+      chat.scrollTop = chat.scrollHeight;
+      inputBox.value = "";
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+
+        const aiBubble = document.createElement("div");
+        aiBubble.className = "msg ai";
+        aiBubble.textContent = data.response || data.error || "No response.";
+        chat.appendChild(aiBubble);
+        chat.scrollTop = chat.scrollHeight;
+      } catch (err) {
+        const errorBubble = document.createElement("div");
+        errorBubble.className = "msg ai";
+        errorBubble.textContent = "Error contacting backend.";
+        chat.appendChild(errorBubble);
+        chat.scrollTop = chat.scrollHeight;
+      }
+    }
+
+    document.getElementById("send").addEventListener("click", sendMessage);
+    document.getElementById("input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+
+</body>
+</html>
