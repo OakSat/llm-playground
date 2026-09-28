@@ -2,128 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI LLM Playground</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background-color: #f4f4f4;
-    }
-
-    #chat {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 1em;
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-    }
-
-    .msg {
-      max-width: 60%;
-      padding: 0.8em 1em;
-      border-radius: 10px;
-      white-space: pre-wrap;
-    }
-
-    .user {
-      align-self: flex-end;
-      background-color: #007bff;
-      color: white;
-    }
-
-    .ai {
-      align-self: flex-start;
-      background-color: #e0e0e0;
-      color: #333;
-    }
-
-    #input-area {
-      display: flex;
-      padding: 1em;
-      border-top: 1px solid #ccc;
-      background-color: white;
-    }
-
-    #input {
-      flex-grow: 1;
-      padding: 0.6em;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    #send {
-      margin-left: 1em;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #send:hover {
-      background-color: #218838;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LLM Playground</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div id="chat"></div>
+<!--
+  Controls carry data-feature="<flag>". On boot, main.js hides every
+  control whose flag is switched off in /api/config. The server refuses
+  those abilities independently -- hiding a control is presentation, not
+  enforcement.
+-->
 
-  <div id="input-area">
-    <input id="input" type="text" placeholder="Ask something..." />
-    <button id="send">Send</button>
-    <!-- TODO: Add a proerass feedback circular indeterminate -->
-  </div>
+<header class="banner" id="banner" hidden></header>
 
-  <script>
-    async function sendMessage() {
-      const inputBox = document.getElementById("input");
-      const chat = document.getElementById("chat");
-      const message = inputBox.value.trim();
-      if (!message) return;
+<div class="layout">
 
-      const userBubble = document.createElement("div");
-      userBubble.className = "msg user";
-      userBubble.textContent = message;
-      chat.appendChild(userBubble);
-      chat.scrollTop = chat.scrollHeight;
-      inputBox.value = "";
+  <aside class="controls">
+    <h1>LLM Playground</h1>
 
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
-        const data = await res.json();
+    <label class="control" data-feature="model_switcher">
+      <span>Model</span>
+      <select id="model"></select>
+      <small id="model-detail" class="hint"></small>
+    </label>
 
-        const aiBubble = document.createElement("div");
-        aiBubble.className = "msg ai";
-        aiBubble.textContent = data.response || data.error || "No response.";
-        chat.appendChild(aiBubble);
-        chat.scrollTop = chat.scrollHeight;
-      } catch (err) {
-        const errorBubble = document.createElement("div");
-        errorBubble.className = "msg ai";
-        errorBubble.textContent = "Error contacting backend.";
-        chat.appendChild(errorBubble);
-        chat.scrollTop = chat.scrollHeight;
-      }
-    }
+    <label class="control">
+      <span>System prompt</span>
+      <textarea id="system" rows="3" placeholder="Optional. Sets the model's role."></textarea>
+    </label>
 
-    document.getElementById("send").addEventListener("click", sendMessage);
-    document.getElementById("input").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") sendMessage();
-    });
-  </script>
+    <label class="control">
+      <span>Temperature <output id="temperature-value">0.8</output></span>
+      <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.8" />
+      <small class="hint">0 is near-deterministic. Above ~1.2 tends to ramble.</small>
+    </label>
 
+    <label class="control">
+      <span>Top-p <output id="top_p-value">0.9</output></span>
+      <input id="top_p" type="range" min="0" max="1" step="0.05" value="0.9" />
+    </label>
+
+    <label class="control">
+      <span>Seed</span>
+      <input id="seed" type="number" placeholder="blank = random" />
+      <small class="hint">Fix it to repeat a sample exactly.</small>
+    </label>
+
+    <label class="control">
+      <span>Context window (num_ctx)</span>
+      <input id="num_ctx" type="number" placeholder="model default" min="256" step="256" />
+      <small class="hint">Shrink it to watch older turns fall out.</small>
+    </label>
+
+    <label class="control toggle" data-feature="reasoning" id="think-control" hidden>
+      <input id="think" type="checkbox" />
+      <span>Show reasoning</span>
+      <small class="hint">Only offered by models with the thinking capability.</small>
+    </label>
+
+    <div class="control" data-feature="structured_output">
+      <label class="toggle">
+        <input id="schema-enabled" type="checkbox" />
+        <span>Force JSON schema</span>
+      </label>
+      <textarea id="schema" rows="7" spellcheck="false" hidden></textarea>
+      <small class="hint">The reply is constrained to match this schema.</small>
+    </div>
+
+    <label class="control toggle" data-feature="compare">
+      <input id="compare" type="checkbox" />
+      <span>Compare two models</span>
+    </label>
+
+    <label class="control" data-feature="compare" id="model-b-control" hidden>
+      <span>Second model</span>
+      <select id="model-b"></select>
+    </label>
+
+    <button id="reset" class="secondary" type="button">Clear conversation</button>
+  </aside>
+
+  <main class="chat">
+    <div class="lanes" id="lanes">
+      <section class="lane" data-lane="a">
+        <h2 class="lane-title" hidden></h2>
+        <div class="messages" id="messages-a"></div>
+      </section>
+      <section class="lane" data-lane="b" hidden>
+        <h2 class="lane-title" hidden></h2>
+        <div class="messages" id="messages-b"></div>
+      </section>
+    </div>
+
+    <form class="composer" id="composer">
+      <textarea id="input" rows="2" placeholder="Ask something. Enter sends, Shift+Enter adds a line."></textarea>
+      <button id="send" type="submit">Send</button>
+      <button id="stop" type="button" class="secondary" hidden>Stop</button>
+    </form>
+  </main>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

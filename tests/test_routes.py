@@ -259,3 +259,21 @@ def test_stream_sets_headers_that_stop_proxy_buffering(api: FlaskClient) -> None
     response = api.post("/api/chat/stream", json={"messages": [{"role": "user", "content": "x"}]})
     assert response.headers["Cache-Control"] == "no-cache"
     assert response.headers["X-Accel-Buffering"] == "no"
+
+
+# -- static assets ---------------------------------------------------------
+
+
+def test_serves_the_interface_at_the_root(api: FlaskClient) -> None:
+    response = api.get("/")
+    assert response.status_code == 200
+    assert b"LLM Playground" in response.data
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/style.css", "/js/main.js", "/js/api.js", "/js/state.js", "/js/ui.js"],
+)
+def test_serves_the_split_frontend_assets(api: FlaskClient, path: str) -> None:
+    """The page is no longer a single file, so each part must be reachable."""
+    assert api.get(path).status_code == 200
