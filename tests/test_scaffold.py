@@ -4,6 +4,8 @@ import importlib.metadata
 import tomllib
 from pathlib import Path
 
+import pytest
+
 import playground
 from playground.cli.__main__ import main
 
@@ -28,9 +30,8 @@ def test_console_script_entry_point_resolves() -> None:
     assert entry.load() is main
 
 
-def test_cli_reports_version() -> None:
-    assert main(["--version"]) == 0
-
-
-def test_cli_exits_nonzero_until_subcommands_land() -> None:
-    assert main([]) == 1
+def test_cli_requires_a_subcommand() -> None:
+    """argparse exits 2 on a missing subcommand; behaviour lives in test_cli."""
+    with pytest.raises(SystemExit) as exc:
+        main([])
+    assert exc.value.code == 2

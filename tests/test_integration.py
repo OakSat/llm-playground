@@ -8,6 +8,7 @@ Run them with:  uv run pytest -m integration
 """
 
 import os
+from pathlib import Path
 
 import pytest
 
@@ -89,3 +90,18 @@ def test_capability_gate_matches_reality(live: OllamaClient) -> None:
     assert "thinking" not in live.capabilities(MODEL)
     with pytest.raises(CapabilityError):
         live.chat(MODEL, [{"role": "user", "content": "hi"}], think=True)
+
+
+def test_real_batch_extraction_validates(live: OllamaClient) -> None:
+    """The CLI path end to end: schema-forced extraction over the sample batch."""
+    from playground.cli.extract import extract_all, load_rows, load_schema
+
+    root = Path(__file__).resolve().parent.parent
+    rows = load_rows(root / "examples" / "support_tickets.jsonl", limit=3)
+    schema = load_schema(root / "examples" / "schemas" / "ticket.json")
+
+    results = list(extract_all(live, MODEL, rows, schema, options={"temperature": 0}))
+    assert len(results) == 3
+    assert all(result.valid for result in results), [r.error for r in results]
+    # The enum constraints in the schema must actually bind.
+    assert all(r.parsed and r.parsed["priority"] in {"low", "medium", "high"} for r in results)
