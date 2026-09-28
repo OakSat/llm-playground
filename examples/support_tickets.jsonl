@@ -1,0 +1,30 @@
+{"id": "t01", "text": "I was charged twice for my subscription this month. Please refund the duplicate payment.", "labels": {"category": "billing", "priority": "high", "sentiment": "negative"}}
+{"id": "t02", "text": "The export button throws an error every time I click it. Nothing downloads.", "labels": {"category": "bug", "priority": "high", "sentiment": "negative"}}
+{"id": "t03", "text": "Could you add a dark mode to the dashboard? It would be easier on the eyes at night.", "labels": {"category": "feature_request", "priority": "low", "sentiment": "neutral"}}
+{"id": "t04", "text": "My parcel was supposed to arrive last Tuesday and the tracking has not updated since.", "labels": {"category": "shipping", "priority": "medium", "sentiment": "negative"}}
+{"id": "t05", "text": "I cannot log in. It says my password is wrong but I just reset it.", "labels": {"category": "account", "priority": "high", "sentiment": "negative"}}
+{"id": "t06", "text": "Thanks for the quick delivery, the package arrived two days early!", "labels": {"category": "shipping", "priority": "low", "sentiment": "positive"}}
+{"id": "t07", "text": "Please cancel my plan at the end of the billing period. No refund needed.", "labels": {"category": "billing", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t08", "text": "The mobile app crashes on startup since the last update. Completely unusable.", "labels": {"category": "bug", "priority": "high", "sentiment": "negative"}}
+{"id": "t09", "text": "How do I change the email address on my account? I could not find the setting.", "labels": {"category": "account", "priority": "low", "sentiment": "neutral"}}
+{"id": "t10", "text": "It would be great if reports could be scheduled to send weekly by email.", "labels": {"category": "feature_request", "priority": "low", "sentiment": "neutral"}}
+{"id": "t11", "text": "I have been overcharged VAT on my last three invoices. This needs correcting urgently.", "labels": {"category": "billing", "priority": "high", "sentiment": "negative"}}
+{"id": "t12", "text": "The shipment arrived with a cracked case. I need a replacement sent out.", "labels": {"category": "shipping", "priority": "high", "sentiment": "negative"}}
+{"id": "t13", "text": "Two-factor authentication codes never arrive by SMS. I am locked out.", "labels": {"category": "account", "priority": "high", "sentiment": "negative"}}
+{"id": "t14", "text": "Minor thing, but the date column sorts alphabetically instead of chronologically.", "labels": {"category": "bug", "priority": "low", "sentiment": "neutral"}}
+{"id": "t15", "text": "Loving the new interface, it is much faster than before. Great work.", "labels": {"category": "feature_request", "priority": "low", "sentiment": "positive"}}
+{"id": "t16", "text": "Can I get a copy of my invoice for January? I need it for expenses.", "labels": {"category": "billing", "priority": "low", "sentiment": "neutral"}}
+{"id": "t17", "text": "Delivery driver left the box in the rain and the contents are soaked.", "labels": {"category": "shipping", "priority": "high", "sentiment": "negative"}}
+{"id": "t18", "text": "Please delete my account and remove all my personal data.", "labels": {"category": "account", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t19", "text": "Search returns no results even for items I know exist. Been broken all week.", "labels": {"category": "bug", "priority": "high", "sentiment": "negative"}}
+{"id": "t20", "text": "Any chance of adding keyboard shortcuts for the most common actions?", "labels": {"category": "feature_request", "priority": "low", "sentiment": "neutral"}}
+{"id": "t21", "text": "My card was declined but the money still left my bank account.", "labels": {"category": "billing", "priority": "high", "sentiment": "negative"}}
+{"id": "t22", "text": "Where is my order? It has been three weeks with no update whatsoever.", "labels": {"category": "shipping", "priority": "high", "sentiment": "negative"}}
+{"id": "t23", "text": "I would like to upgrade my seat count from five to twenty. What is the cost?", "labels": {"category": "billing", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t24", "text": "The page layout breaks completely on a narrow browser window.", "labels": {"category": "bug", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t25", "text": "Could you support single sign-on with Okta? Our security team requires it.", "labels": {"category": "feature_request", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t26", "text": "My profile picture will not upload. It just spins forever and then fails.", "labels": {"category": "bug", "priority": "medium", "sentiment": "negative"}}
+{"id": "t27", "text": "Thank you for sorting out my refund so quickly, excellent service.", "labels": {"category": "billing", "priority": "low", "sentiment": "positive"}}
+{"id": "t28", "text": "I need to transfer ownership of this workspace to a colleague.", "labels": {"category": "account", "priority": "medium", "sentiment": "neutral"}}
+{"id": "t29", "text": "The tracking number you gave me belongs to someone else's order entirely.", "labels": {"category": "shipping", "priority": "high", "sentiment": "negative"}}
+{"id": "t30", "text": "Please add the ability to bulk import contacts from a CSV file.", "labels": {"category": "feature_request", "priority": "medium", "sentiment": "neutral"}}

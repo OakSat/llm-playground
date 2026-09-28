@@ -1,0 +1,45 @@
+# Two services, so the model cache outlives the app image.
+#
+#   docker compose up            build, start, pull the default model
+#   docker compose down          stop (models are kept in the volume)
+#   docker compose down -v       stop and discard the downloaded models
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      # Named volume: models are large and must survive a rebuild.
+      - ollama-models:/root/.ollama
+    ports:
+      - "${OLLAMA_HOST_PORT:-11434}:11434"
+    restart: unless-stopped
+
+  # Runs once to fetch the default model, then exits. Pulling is
+  # idempotent, so leaving it in place costs nothing on later starts.
+  model-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c", "ollama pull ${PLAYGROUND_MODEL:-llama3.2}"]
+    restart: "no"
+
+  app:
+    build: .
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      PLAYGROUND_MODEL: ${PLAYGROUND_MODEL:-llama3.2}
+      # Fixed inside the container so the port mapping below stays valid;
+      # change the host side instead.
+      PLAYGROUND_PORT: 5000
+    ports:
+      # macOS holds 5000 for the AirPlay Receiver, so override the host
+      # side there: PLAYGROUND_HOST_PORT=5055 docker compose up
+      - "${PLAYGROUND_HOST_PORT:-5000}:5000"
+    restart: unless-stopped
+
+volumes:
+  ollama-models:

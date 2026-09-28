@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": ["billing", "bug", "account", "feature_request", "shipping"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": ["positive", "neutral", "negative"]
+    }
+  },
+  "required": ["category", "priority", "sentiment"],
+  "additionalProperties": false
+}
