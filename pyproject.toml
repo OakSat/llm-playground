@@ -34,9 +34,6 @@ packages = ["src/playground"]
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
-# backend/ is the pre-v0.2 prototype. It is replaced by src/playground/web in
-# phase 2, so it is deliberately left unlinted rather than churned first.
-extend-exclude = ["backend"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]

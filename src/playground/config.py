@@ -22,6 +22,7 @@ _FALSY = frozenset({"0", "false", "no", "off"})
 DEFAULT_HOST = "http://localhost:11434"
 DEFAULT_MODEL = "llama3.2"
 DEFAULT_TIMEOUT = 120.0
+DEFAULT_PORT = 5000
 
 
 def _parse_bool(raw: str, *, variable: str) -> bool:
@@ -99,6 +100,7 @@ class Settings:
     ollama_host: str = DEFAULT_HOST
     default_model: str = DEFAULT_MODEL
     request_timeout: float = DEFAULT_TIMEOUT
+    port: int = DEFAULT_PORT
     features: Features = field(default_factory=Features)
 
     @classmethod
@@ -122,9 +124,18 @@ class Settings:
             if timeout <= 0:
                 raise ValueError("PLAYGROUND_REQUEST_TIMEOUT must be greater than zero.")
 
+        raw_port = source.get("PLAYGROUND_PORT")
+        try:
+            port = DEFAULT_PORT if raw_port is None else int(raw_port)
+        except ValueError as exc:
+            raise ValueError(f"PLAYGROUND_PORT={raw_port!r} is not an integer.") from exc
+        if not 1 <= port <= 65535:
+            raise ValueError("PLAYGROUND_PORT must be between 1 and 65535.")
+
         return cls(
             ollama_host=normalise_host(source.get("OLLAMA_HOST", DEFAULT_HOST)),
             default_model=model.strip(),
             request_timeout=timeout,
+            port=port,
             features=Features.from_env(source),
         )

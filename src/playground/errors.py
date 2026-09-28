@@ -26,6 +26,12 @@ class FeatureDisabledError(PlaygroundError):
         )
 
 
+class InvalidRequestError(PlaygroundError):
+    """The caller sent a malformed request body."""
+
+    http_status = 400
+
+
 class CapabilityError(PlaygroundError):
     """The requested model cannot do what was asked of it.
 

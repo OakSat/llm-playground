@@ -95,3 +95,18 @@ def test_settings_carries_feature_flags() -> None:
     settings = Settings.from_env({"OLLAMA_HOST": "box:11434", "FEATURE_STATS": "0"})
     assert settings.ollama_host == "http://box:11434"
     assert settings.features.stats is False
+
+
+def test_port_defaults_to_five_thousand() -> None:
+    assert Settings.from_env({}).port == 5000
+
+
+def test_port_is_configurable() -> None:
+    """macOS AirPlay Receiver occupies 5000, so this must be overridable."""
+    assert Settings.from_env({"PLAYGROUND_PORT": "5050"}).port == 5050
+
+
+@pytest.mark.parametrize("raw", ["http", "0", "70000", "-1"])
+def test_bad_port_is_rejected(raw: str) -> None:
+    with pytest.raises(ValueError, match="PLAYGROUND_PORT"):
+        Settings.from_env({"PLAYGROUND_PORT": raw})
