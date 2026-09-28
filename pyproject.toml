@@ -1,6 +1,6 @@
 [project]
 name = "llm-playground"
-version = "0.2.0.dev0"
+version = "0.2.0"
 description = "An educational playground for local small language models, powered by Ollama"
 readme = "README.md"
 requires-python = ">=3.11"

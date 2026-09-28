@@ -95,7 +95,7 @@ number."*
 
 > **Notice:** both answer `51`. But expand the **Reasoning** block on the right
 > and look at the statistics: measured here, llama3.2 spent **2 output tokens
-> in 6.4s**, deepseek-r1 spent **540 output tokens in 27.7s** — for the same
+> in 6.6s**, deepseek-r1 spent **593 output tokens in 30.9s** — for the same
 > answer. Thinking tokens are counted in the same `eval_count`, which is why
 > tokens/sec is not comparable between a reasoning and a non-reasoning model.
 

@@ -366,7 +366,7 @@ wheels = [
 
 [[package]]
 name = "llm-playground"
-version = "0.2.0.dev0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "flask" },

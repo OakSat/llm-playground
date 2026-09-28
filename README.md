@@ -18,6 +18,11 @@ It has two surfaces, deliberately:
 Every ability can be switched off individually, so the project can be
 introduced one concept at a time.
 
+![Two models answering the same prompt side by side, with token statistics](assets/playground-compare.jpg)
+
+*The same question to a 3.2B model and an 8.2B reasoning model. Both answer 51 —
+one in 2 output tokens, the other in 593.*
+
 ---
 
 ## Requirements
